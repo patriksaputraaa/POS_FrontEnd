@@ -1,7 +1,14 @@
 <?php
-    $url = "https://dummyjson.com/users";
-    $response = json_decode(file_get_contents($url), true);
-    $customers = $response['users'];
+    $url = "https://localhost:7184/api/customer";
+
+    $context = stream_context_create([
+        "ssl" => [
+            "verify_peer" => false,
+            "verify_peer_name" => false,
+        ]
+    ]);
+
+    $customers = json_decode(file_get_contents($url, false, $context), true);
 ?>
 <html>
     <head>
@@ -13,17 +20,18 @@
         <table class="table">
             <tr>
                 <th>ID</th>
-                <th>Username</th>
+                <th>Name</th>
+                <th>Contact</th>
                 <th>Email</th>
-                <th>Gender</th>
-                <th>Actions</th>
+                <th>Address</th>
             </tr>
             <?php foreach($customers as $customer): ?>
             <tr>
                 <td><?php echo $customer['id']?></td>
-                <td><?php echo $customer['username']?> <?php echo $customer['lastName']?></td>
+                <td><?php echo $customer['name']?>
+                <td><?php echo $customer['contactNumber']?></td>
                 <td><?php echo $customer['email']?></td>
-                <td><?php echo $customer['gender']?></td>
+                <td><?php echo $customer['address']?></td>
                 <td>
                     <a href="update_customer.php?id=<?php echo $customer['id']?>" class="btn btn-secondary">Update</a>
                     <a href="delete_customer.php?id=<?php echo $customer['id']?>" class="btn btn-danger">Delete</a>
